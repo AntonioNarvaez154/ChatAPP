@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block container %}
+
+<h1>
+    Bienvenido {{user}}. Inbox
+</h1>
+
+{% for inbox in inbox %}
+
+<div class="div_inbox">
+
+
+    {% for second_user in inbox.chaneluser_set.all %}
+
+        {% if second_user.user == request.user %}
+
+        {% else %}
+            <a href="{% url 'detailms' second_user.user.username %}">
+                <p>
+                    {{second_user.user}}
+                </p>
+                <small>
+                    ({{inbox.chanelmessage_set.count}}) Mensajes
+                </small>
+            </a>
+        {% endif %}
+
+    {% endfor %}
+
+    {% if inbox.chanelmessage_set.count != 0 %}
+            <div class="div_ms_inbox">
+                {% with last_message=inbox.chanelmessage_set.last %}
+                    <p>
+                        Mensaje: {{last_message.text}}
+                    </p>
+
+                    <p>
+                        Usuario: {{last_message.user}}
+                    </p>
+                {% endwith%}
+            </div>
+    {% else %}
+            <p>
+                No hay mensajes en el chat
+            </p>
+    {% endif %}
+    
+</div>
+
+{% empty %}
+
+<h2>
+    Inbox Vacio
+</h2>
+
+{% endfor%}
+
+<style>
+    .div_inbox{
+        width: 90%;
+        margin: 40px auto;
+        background: #ffffff;
+        border-radius: 10px;
+        border: 1px solid rgb(197, 180, 19);
+        padding: 5px;
+    }
+</style>
+
+{% endblock %}
